@@ -1,81 +1,116 @@
-async function getWorks() {
+let categories = []
+let works = []
+let worksBackup = []
+
+// Cette fonction affiche les oeuvres en fonction de la catégorie sélectionnée
+const filterWorks = category => {
+  // On sélectionne l'élément HTML qui contiendra les oeuvres
+  const portfolio = document.querySelector('.gallery')
+
+  // On vide cet élément pour supprimer les oeuvres précédemment affichées
+  portfolio.innerHTML = ''
+
+  // On filtre les oeuvres à afficher en fonction de la catégorie sélectionnée
+  const filteredWorks =
+    category === 'Tous'
+      ? worksBackup // Si 'Tous' est sélectionné, on affiche toutes les oeuvres
+      : works.filter(work => work.category.name === category) // Sinon, on affiche seulement les oeuvres de la catégorie sélectionnée
+
+  // On ajoute chaque oeuvre au HTML
+  filteredWorks.forEach(work => {
+    const figure = document.createElement('figure')
+    const img = document.createElement('img')
+    img.src = work.imageUrl
+    img.alt = work.title
+    figure.appendChild(img)
+    const figcaption = document.createElement('figcaption')
+    figcaption.textContent = work.title
+    figure.appendChild(figcaption)
+    portfolio.appendChild(figure)
+  })
+}
+
+// Cette fonction affiche les boutons de sélection de catégorie
+const displayCategories = () => {
+  // On sélectionne l'élément HTML qui contiendra les boutons
+  const divCategories = document.querySelector('.filter')
+
+  // On ajoute un bouton "Tous" en premier pour afficher toutes les catégories par défaut
+  const all = { id: 0, name: 'Tous' }
+  categories.unshift(all)
+
+  // On crée un bouton pour chaque catégorie
+  categories.forEach(category => {
+    const buttonCategories = document.createElement('button')
+    buttonCategories.innerText = category.name
+    buttonCategories.classList.add('choice-pictures')
+
+    // On ajoute la classe "active" au bouton "Tous"
+    if (category.id === 0) {
+      buttonCategories.classList.add('active')
+    }
+
+    // On ajoute chaque bouton au HTML
+    divCategories.appendChild(buttonCategories)
+
+    // On ajoute un événement "click" à chaque bouton
+    buttonCategories.addEventListener('click', () => {
+      // On filtre les oeuvres à afficher en fonction de la catégorie sélectionnée
+      works =
+        category.id === 0
+          ? [...worksBackup] // Si 'Tous' est sélectionné, on affiche toutes les oeuvres
+          : worksBackup.filter(work => work.categoryId === category.id) // Sinon, on affiche seulement les oeuvres de la catégorie sélectionnée
+
+      // On supprime la classe "active" du bouton actuellement sélectionné
+      const activeButton = document.querySelector('.active')
+      if (activeButton) {
+        activeButton.classList.remove('active')
+      }
+
+      // On ajoute la classe "active" au bouton sélectionné
+      buttonCategories.classList.add('active')
+
+      // On affiche les oeuvres correspondant à la catégorie sélectionnée
+      filterWorks(category.name)
+    })
+  })
+}
+
+// Cette fonction récupère les données des catégories et des oeuvres depuis une API
+const fetchData = async () => {
   try {
-    /*Récupérer les projets */
-    const responseWork = await fetch('http://localhost:5678/api/works', {})
-    if (!responseWork.ok) {
-      throw new Error(`Failed to fetch: ${responseWork.status}`)
+    // Récupération de deux réponses en parallèle en utilisant Promise.all
+    const [categoriesResponse, worksResponse] = await Promise.all([
+      fetch('http://localhost:5678/api/categories'),
+      fetch('http://localhost:5678/api/works')
+    ])
+
+    // Si la réponse pour les catégories n'est pas réussie, une erreur est levée
+    if (!categoriesResponse.ok) {
+      throw new Error(
+        `Failed to fetch categories: ${categoriesResponse.status}`
+      )
     }
-    const displayWork = await responseWork.json()
-    let portfolio = document.querySelector('.gallery')
-    /*Supprimer le HTML*/
-    portfolio.innerHTML = ''
-    for (let i in displayWork) {
-      /*Intégrer les projets récupérés via l'API*/
-      let figure = document.createElement('figure')
-
-      let img = document.createElement('img')
-      img.setAttribute('src', displayWork[i].imageUrl)
-      img.setAttribute('alt', displayWork[i].title)
-      figure.appendChild(img)
-
-      let figcaption = document.createElement('figcaption')
-      figcaption.textContent = displayWork[i].title
-      figure.appendChild(figcaption)
-
-      console.log(portfolio)
-      portfolio.appendChild(figure)
+    // Si la réponse pour les œuvres n'est pas réussie, une erreur est levée
+    if (!worksResponse.ok) {
+      throw new Error(`Failed to fetch works: ${worksResponse.status}`)
     }
+
+    // Les données JSON sont extraites de la réponse pour les catégories et stockées dans la variable categories
+    categories = await categoriesResponse.json()
+    // Les données JSON sont extraites de la réponse pour les œuvres et stockées dans la variable works
+    works = await worksResponse.json()
+    // Une copie de la liste originale des œuvres est créée pour être utilisée plus tard lors de la filtration
+    worksBackup = [...works]
+
+    // La fonction displayCategories est appelée pour afficher les boutons de filtre dans la page
+    displayCategories()
+    // La fonction filterWorks est appelée avec la catégorie "Tous" pour afficher toutes les œuvres initialement
+    filterWorks('Tous')
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
-getWorks()
 
-async function getCategories() {
-  try {
-    /*Création des filtres */
-    const responseCategories = await fetch(
-      'http://localhost:5678/api/categories'
-    )
-    if (!responseCategories.ok) {
-      throw new Error(`Failed to fetch: ${responseCategories.status}`)
-    }
-    const displayCategories = await responseCategories.json()
-
-    /*Choix de l'emplacement de la balise HTML*/
-    const divCategories = document.querySelector('.filter')
-    const all = {
-      id: 0,
-      name: 'Tous'
-    }
-    displayCategories.unshift(all)
-
-    /*Boucle dans le tableau json*/
-    for (let i in displayCategories) {
-      /*Création des balises HTML*/
-      const buttonCategories = document.createElement('button')
-      buttonCategories.innerText = displayCategories[i].name
-      /*Ajoute une class*/
-      buttonCategories.classList.add('choice-pictures')
-      if (displayCategories[i].id === 0)
-        buttonCategories.classList.add('active')
-      /*Placement*/
-      divCategories.appendChild(buttonCategories)
-      /*Filtres sur les boutons*/
-      buttonCategories.addEventListener('click', function () {
-        let worksFilters = responseWork
-        if (displayCategories[i].id != 0) {
-          worksFilters = responseWork.filter(function (responseWork) {
-            return responseWork.categoryId === displayCategories[i].id
-          })
-        }
-        document.querySelector('.active').classList.remove('active')
-        buttonCategories.classList.add('active')
-      })
-    }
-    console.log(divCategories)
-  } catch (e) {
-    console.log(e)
-  }
-}
-getCategories()
+// La fonction fetchData est appelée pour récupérer les données au démarrage de l'application
+fetchData()
