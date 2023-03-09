@@ -6,7 +6,6 @@ let worksBackup = []
 const filterWorks = category => {
   // On sélectionne l'élément HTML qui contiendra les oeuvres
   const portfolio = document.querySelector('.gallery')
-
   // On vide cet élément pour supprimer les oeuvres précédemment affichées
   portfolio.innerHTML = ''
 
@@ -15,6 +14,7 @@ const filterWorks = category => {
     category === 'Tous'
       ? worksBackup // Si 'Tous' est sélectionné, on affiche toutes les oeuvres
       : works.filter(work => work.category.name === category) // Sinon, on affiche seulement les oeuvres de la catégorie sélectionnée
+  //s'applique a chaque éléments - Si la catégorie de l'élément actuel === à la catégorie choisie alors on l'ajoute
 
   // On ajoute chaque oeuvre au HTML
   filteredWorks.forEach(work => {
@@ -35,7 +35,7 @@ const displayCategories = () => {
   // On sélectionne l'élément HTML qui contiendra les boutons
   const divCategories = document.querySelector('.filter')
 
-  // On ajoute un bouton "Tous" en premier pour afficher toutes les catégories par défaut
+  // On ajoute un bouton "Tous" en premier (grâce à unshift qui ajoute l'élément et décale les autres éléments du tableau à droite)
   const all = { id: 0, name: 'Tous' }
   categories.unshift(all)
 
@@ -43,9 +43,9 @@ const displayCategories = () => {
   categories.forEach(category => {
     const buttonCategories = document.createElement('button')
     buttonCategories.innerText = category.name
-    buttonCategories.classList.add('choice-pictures')
+    buttonCategories.classList.add('button-style')
 
-    // On ajoute la classe "active" au bouton "Tous"
+    // On ajoute la classe "active" au bouton "Tous" (id: 0 étant "Tous")
     if (category.id === 0) {
       buttonCategories.classList.add('active')
     }
@@ -96,11 +96,10 @@ const fetchData = async () => {
       throw new Error(`Failed to fetch works: ${worksResponse.status}`)
     }
 
-    // Les données JSON sont extraites de la réponse pour les catégories et stockées dans la variable categories
+    // Les données JSON sont extraites de la réponse
     categories = await categoriesResponse.json()
-    // Les données JSON sont extraites de la réponse pour les œuvres et stockées dans la variable works
     works = await worksResponse.json()
-    // Une copie de la liste originale des œuvres est créée pour être utilisée plus tard lors de la filtration
+    // Une copie de la liste originale des œuvres est créée pour être utilisée plus tard lors de la filtration (Grâce à ... on étale les éléments du tableau 'works' dans un tableau 'worksBackup')
     worksBackup = [...works]
 
     // La fonction displayCategories est appelée pour afficher les boutons de filtre dans la page

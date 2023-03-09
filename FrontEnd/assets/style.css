@@ -213,7 +213,7 @@ li:hover {
   gap: 1%;
 }
 
-.choice-pictures {
+.button-style {
   min-height: 37px;
   max-width: 200px;
   min-width: 120px;
@@ -227,7 +227,7 @@ li:hover {
   font-weight: bold;
 }
 
-.choice-pictures:hover {
+.button-style:hover {
   color: white;
   background-color: #1d6154;
   cursor: pointer;
