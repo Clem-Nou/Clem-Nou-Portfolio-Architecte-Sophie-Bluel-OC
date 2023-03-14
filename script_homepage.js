@@ -3,7 +3,7 @@ let works = []
 let worksBackup = []
 
 // Cette fonction affiche les oeuvres en fonction de la catégorie sélectionnée
-const filterWorks = category => {
+const displayWorks = category => {
   // On sélectionne l'élément HTML qui contiendra les oeuvres
   const portfolio = document.querySelector('.gallery')
   // On vide cet élément pour supprimer les oeuvres précédemment affichées
@@ -31,7 +31,7 @@ const filterWorks = category => {
 }
 
 // Cette fonction affiche les boutons de sélection de catégorie
-const displayCategories = () => {
+const filterCategories = () => {
   // On sélectionne l'élément HTML qui contiendra les boutons
   const divCategories = document.querySelector('.filter')
 
@@ -71,7 +71,7 @@ const displayCategories = () => {
       buttonCategories.classList.add('active')
 
       // On affiche les oeuvres correspondant à la catégorie sélectionnée
-      filterWorks(category.name)
+      displayWorks(category.name)
     })
   })
 }
@@ -102,10 +102,10 @@ const fetchData = async () => {
     // Une copie de la liste originale des œuvres est créée pour être utilisée plus tard lors de la filtration (Grâce à ... on étale les éléments du tableau 'works' dans un tableau 'worksBackup')
     worksBackup = [...works]
 
-    // La fonction displayCategories est appelée pour afficher les boutons de filtre dans la page
-    displayCategories()
-    // La fonction filterWorks est appelée avec la catégorie "Tous" pour afficher toutes les œuvres initialement
-    filterWorks('Tous')
+    // La fonction filterCategories est appelée pour afficher les boutons de filtre dans la page
+    filterCategories()
+    // La fonction displayWorks est appelée avec la catégorie "Tous" pour afficher toutes les œuvres initialement
+    displayWorks('Tous')
   } catch (e) {
     console.error(e)
   }

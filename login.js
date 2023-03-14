@@ -33,7 +33,12 @@ loginForm.addEventListener('submit', async event => {
       }
 
       message.style.color = 'red'
-      message.innerText = 'Erreur: ' + error.message
+
+      if (response.status === 401) {
+        message.innerText = 'Erreur: E-mail ou Mot de passe invalide'
+      } else {
+        message.innerText = 'Erreur: ' + error.message
+      }
     }
   } catch (error) {
     console.error(error)
