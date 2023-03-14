@@ -164,6 +164,10 @@ h2 {
   font-size: 30px;
   color: #1d6154;
 }
+a {
+  text-decoration: none;
+  color: black;
+}
 nav ul {
   display: flex;
   align-items: center;
@@ -172,6 +176,9 @@ nav ul {
 nav li {
   padding: 0 10px;
   font-size: 1.2em;
+}
+#nav-active {
+  font-weight: bold;
 }
 
 li:hover {
@@ -319,8 +326,9 @@ input[type='password'] {
   margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
 input[type='submit'] {
@@ -342,7 +350,6 @@ input[type='submit']:hover {
 .passwordForgot {
   font-family: 'Work Sans';
   font-style: normal;
-  display: block;
   text-align: center;
   color: #3d3d3d;
   text-decoration-line: underline;
