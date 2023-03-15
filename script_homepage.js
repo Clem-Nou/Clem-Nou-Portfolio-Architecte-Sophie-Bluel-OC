@@ -99,11 +99,13 @@ const fetchData = async () => {
     // Les données JSON sont extraites de la réponse
     categories = await categoriesResponse.json()
     works = await worksResponse.json()
-    // Une copie de la liste originale des œuvres est créée pour être utilisée plus tard lors de la filtration (Grâce à ... on étale les éléments du tableau 'works' dans un tableau 'worksBackup')
+    // Une copie de la liste originale des œuvres est créée pour être utilisée plus tard lors de la filtration (Grâce à l'opérateur Spread on étale les éléments du tableau 'works' dans un tableau 'worksBackup')
     worksBackup = [...works]
 
     // La fonction filterCategories est appelée pour afficher les boutons de filtre dans la page
     filterCategories()
+    console.log(categories)
+    console.log(works)
     // La fonction displayWorks est appelée avec la catégorie "Tous" pour afficher toutes les œuvres initialement
     displayWorks('Tous')
   } catch (e) {
