@@ -361,3 +361,32 @@ footer nav ul {
   justify-content: flex-end;
   margin: 2em;
 }
+
+/* Modale */
+#modal {
+  position: fixed;
+  width: 630px;
+  height: 731px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: none;
+}
+#close-modal {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+#modal-subtitle {
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 30px;
+  text-align: center;
+  color: #000000;
+  padding-top: 0px;
+}

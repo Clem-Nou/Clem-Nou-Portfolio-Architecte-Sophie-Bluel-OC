@@ -61,7 +61,7 @@ const filterCategories = () => {
           ? [...worksBackup] // Si 'Tous' est sélectionné, on affiche toutes les oeuvres
           : worksBackup.filter(work => work.categoryId === category.id) // Sinon, on affiche seulement les oeuvres de la catégorie sélectionnée
 
-      // On supprime la classe "active" du bouton actuellement sélectionné
+      // On supprime la classe "active"
       const activeButton = document.querySelector('.active')
       if (activeButton) {
         activeButton.classList.remove('active')
@@ -115,3 +115,29 @@ const fetchData = async () => {
 
 // La fonction fetchData est appelée pour récupérer les données au démarrage de l'application
 fetchData()
+
+// MODALE //
+
+// On vérifie si un token d'authentification est présent dans le local storage
+const openBtn = document.querySelector('#open-modal')
+const closeBtn = document.querySelector('#close-modal')
+const dialog = document.querySelector('#modal')
+
+if (localStorage.getItem('token')) {
+  openBtn.style.display = 'block'
+}
+
+openBtn.addEventListener('click', () => {
+  dialog.showModal()
+})
+
+closeBtn.addEventListener('click', () => {
+  dialog.close()
+})
+
+// Ferme la modale si l'utilisateur clique en dehors de celle-ci
+window.addEventListener('click', event => {
+  if (event.target == dialog) {
+    dialog.close()
+  }
+})
