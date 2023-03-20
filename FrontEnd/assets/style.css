@@ -362,14 +362,43 @@ footer nav ul {
   margin: 2em;
 }
 
+/* Modif */
+.fa-pen-to-square {
+  font-weight: 400;
+  font-size: 14px;
+}
+#modif-pic {
+  padding-left: 60px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 40px;
+}
+#modif-portfolio {
+  display: inline;
+}
 /* Modale */
 #modal {
   position: fixed;
   width: 630px;
   height: 731px;
-  background: #ffffff;
+  background-color: #ffffff;
   border-radius: 10px;
   border: none;
+}
+#open-modal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background-color: black;
+  color: #ffffff;
+  text-align: center;
+}
+body.modal-open {
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 #close-modal {
   float: right;
@@ -388,5 +417,66 @@ footer nav ul {
   line-height: 30px;
   text-align: center;
   color: #000000;
-  padding-top: 0px;
+  padding-top: 25px;
+  padding-bottom: 15px;
+}
+.modal-gallery {
+  width: 500px;
+  margin: auto;
+  padding-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #b3b3b3;
+}
+.modal-img {
+  height: 104px;
+  width: 78px;
+  padding: 11px 11px 5px 11px;
+}
+.modal-img-container {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+.fa-trash-can {
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 15px;
+  color: white;
+  background-color: black;
+  padding: 3px;
+  border-radius: 2px;
+  border: 1px solid black;
+}
+.modal-fig {
+  padding-left: 11px;
+}
+.buttonModalFin {
+  text-align: center;
+  margin-top: 25px;
+}
+.buttonModalFin button {
+  display: block;
+  margin: 0.5rem auto;
+}
+.addPictures {
+  width: 237px;
+  height: 36px;
+  color: #ffffff;
+  background-color: #1d6154;
+  border-radius: 60px;
+  border: none;
+}
+.removeGallery {
+  padding-top: 10px;
+  color: #d65353;
+  border: none;
+  background-color: white;
+}
+.addPictures:hover,
+.removeGallery:hover,
+#open-modal:hover {
+  cursor: pointer;
 }

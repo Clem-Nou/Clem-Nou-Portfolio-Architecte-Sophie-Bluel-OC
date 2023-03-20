@@ -118,26 +118,60 @@ fetchData()
 
 // MODALE //
 
-// On vérifie si un token d'authentification est présent dans le local storage
 const openBtn = document.querySelector('#open-modal')
 const closeBtn = document.querySelector('#close-modal')
 const dialog = document.querySelector('#modal')
 
+// On vérifie si un token d'authentification est présent dans le local storage
 if (localStorage.getItem('token')) {
   openBtn.style.display = 'block'
 }
 
 openBtn.addEventListener('click', () => {
   dialog.showModal()
+  displayWorksInModal()
+  document.body.classList.add('modal-open')
 })
 
 closeBtn.addEventListener('click', () => {
   dialog.close()
+  document.body.classList.remove('modal-open')
 })
 
 // Ferme la modale si l'utilisateur clique en dehors de celle-ci
 window.addEventListener('click', event => {
   if (event.target == dialog) {
     dialog.close()
+    document.body.classList.remove('modal-open')
   }
 })
+
+function displayWorksInModal() {
+  const modalGallery = document.getElementById('modal-gallery')
+  modalGallery.innerHTML = ''
+  works.forEach(work => {
+    const modalFigure = document.createElement('figure')
+
+    const modalFigureContainer = document.createElement('div')
+    modalFigureContainer.classList.add('modal-img-container')
+
+    const modalIcon = document.createElement('i')
+    modalIcon.classList.add('fa-regular', 'fa-trash-can')
+    modalFigureContainer.appendChild(modalIcon)
+
+    const modalImg = document.createElement('img')
+    modalImg.src = work.imageUrl
+    modalImg.alt = work.title
+    modalImg.classList.add('modal-img')
+
+    modalFigureContainer.appendChild(modalImg)
+    modalFigure.appendChild(modalFigureContainer)
+
+    const modalEdit = document.createElement('figcaption')
+    modalEdit.innerText = 'éditer'
+    modalEdit.classList.add('modal-fig')
+
+    modalFigure.appendChild(modalEdit)
+    modalGallery.appendChild(modalFigure)
+  })
+}
