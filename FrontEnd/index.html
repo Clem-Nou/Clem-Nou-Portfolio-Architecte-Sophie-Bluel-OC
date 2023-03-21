@@ -16,7 +16,10 @@
   </head>
   <body>
     <!--Modale-->
-    <button id="open-modal" style="display: none"><i class="fa-solid fa-pen-to-square"></i> Mode édition</button>
+    <div id="open-modal-container" style="display: none">
+    <button id="open-modal"><i class="fa-solid fa-pen-to-square"></i> Mode édition</button>
+    <button id="confirm-changes">Publier les changements</button>
+    </div>
 
     <dialog id="modal">
       <div>
@@ -47,8 +50,10 @@
     <main>
       <section id="introduction">
         <figure>
-          <img src="./assets/images/sophie-bluel.png" alt="Sophie Bluel" />
-          <a id="modif-pic"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
+             <img src="./assets/images/sophie-bluel.png" alt="Sophie Bluel" />
+    <figcaption>
+      <a id="modif-pic" class="hidden"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
+    </figcaption>
         </figure>
         <article>
           <h2>Designer d'espace</h2>
@@ -72,8 +77,8 @@
 
       <section id="portfolio">
         <h2>Mes Projets</h2>
-        <a id="modif-portfolio"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
-        <div class="filter" id="filter"></div>
+        <a id="modif-portfolio" class="hidden"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
+        <div class="filter hidden" id="filter"></div>
         <div class="gallery"></div>
       </section>
 

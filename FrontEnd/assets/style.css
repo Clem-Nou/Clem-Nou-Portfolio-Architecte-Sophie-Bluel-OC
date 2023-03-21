@@ -287,24 +287,13 @@ li:hover {
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type='submit'] {
-  font-family: 'Syne';
-  font-weight: 700;
-  color: white;
-  background-color: #1d6154;
-  margin: 2em auto;
-  width: 180px;
-  text-align: center;
-  border-radius: 60px;
-}
-
 #login {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.login-Form {
+.login-form {
   display: flex;
   flex-direction: column;
 
@@ -334,13 +323,16 @@ input[type='password'] {
 input[type='submit'] {
   font-family: 'Work Sans';
   font-style: normal;
-  background-color: #1d6154;
   color: white;
+  background-color: #1d6154;
   padding: 10px 20px;
-  border: none;
+  margin: 2em auto 20px;
+  width: 180px;
+  text-align: center;
   border-radius: 60px;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
   cursor: pointer;
-  margin-bottom: 20px;
 }
 
 input[type='submit']:hover {
@@ -363,18 +355,18 @@ footer nav ul {
 }
 
 /* Modif */
-.fa-pen-to-square {
+
+.hidden {
+  display: none;
   font-weight: 400;
   font-size: 14px;
 }
 #modif-pic {
-  padding-left: 60px;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 40px;
+  display: block;
+  margin-top: 1rem;
+  padding-left: 58px;
 }
 #modif-portfolio {
-  display: inline;
 }
 /* Modale */
 #modal {
@@ -385,7 +377,7 @@ footer nav ul {
   border-radius: 10px;
   border: none;
 }
-#open-modal {
+#open-modal-container {
   display: block;
   position: fixed;
   top: 0;
@@ -395,6 +387,24 @@ footer nav ul {
   background-color: black;
   color: #ffffff;
   text-align: center;
+}
+#open-modal {
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  background: none;
+  border: none;
+  color: white;
+}
+#confirm-changes {
+  padding: 5px 10px 5px;
+  text-align: center;
+  border: none;
+  background: #ffffff;
+  border-radius: 60px;
 }
 body.modal-open {
   overflow: hidden;
@@ -479,4 +489,20 @@ body.modal-open {
 .removeGallery:hover,
 #open-modal:hover {
   cursor: pointer;
+}
+.modal-img-container .fa-position {
+  visibility: hidden;
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  margin: 15px;
+  color: white;
+  background-color: black;
+  padding: 3px;
+  border-radius: 2px;
+  border: 1px solid black;
+}
+.modal-img-container:hover .fa-position {
+  visibility: visible;
 }

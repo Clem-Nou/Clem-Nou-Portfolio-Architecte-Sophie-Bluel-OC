@@ -118,60 +118,134 @@ fetchData()
 
 // MODALE //
 
-const openBtn = document.querySelector('#open-modal')
-const closeBtn = document.querySelector('#close-modal')
-const dialog = document.querySelector('#modal')
+// Sélection des éléments du DOM
+const openModalContainer = document.querySelector('#open-modal-container')
+const openModalButton = document.querySelector('#open-modal')
+const closeModalButton = document.querySelector('#close-modal')
+const modalDialog = document.querySelector('#modal')
+const modalGallery = document.getElementById('modal-gallery')
 
-// On vérifie si un token d'authentification est présent dans le local storage
+// Vérification de la présence d'un token d'authentification dans le local storage
 if (localStorage.getItem('token')) {
-  openBtn.style.display = 'block'
+  openModalContainer.style.display = 'block'
 }
 
-openBtn.addEventListener('click', () => {
-  dialog.showModal()
+// Gestionnaire d'événements pour ouvrir la modale
+openModalButton.addEventListener('click', () => {
+  modalDialog.showModal()
   displayWorksInModal()
   document.body.classList.add('modal-open')
 })
 
-closeBtn.addEventListener('click', () => {
-  dialog.close()
+// Gestionnaire d'événements pour fermer la modale
+closeModalButton.addEventListener('click', () => {
+  modalDialog.close()
   document.body.classList.remove('modal-open')
 })
 
 // Ferme la modale si l'utilisateur clique en dehors de celle-ci
 window.addEventListener('click', event => {
-  if (event.target == dialog) {
-    dialog.close()
+  if (event.target == modalDialog) {
+    modalDialog.close()
     document.body.classList.remove('modal-open')
   }
 })
 
+// Fonction pour afficher les travaux dans la modale
 function displayWorksInModal() {
-  const modalGallery = document.getElementById('modal-gallery')
+  // Effacer le contenu précédent de la modale
   modalGallery.innerHTML = ''
+
+  // Parcourir les travaux et créer une figure pour chacun
   works.forEach(work => {
     const modalFigure = document.createElement('figure')
 
+    // Créer un conteneur pour l'icône de suppression et de positionnement
     const modalFigureContainer = document.createElement('div')
     modalFigureContainer.classList.add('modal-img-container')
 
-    const modalIcon = document.createElement('i')
-    modalIcon.classList.add('fa-regular', 'fa-trash-can')
-    modalFigureContainer.appendChild(modalIcon)
-
+    // Créer l'icône de suppression
+    const modalDeleteIcon = document.createElement('i')
+    modalDeleteIcon.classList.add('fa-regular', 'fa-trash-can')
+    modalFigureContainer.appendChild(modalDeleteIcon)
+    modalDeleteIcon.addEventListener('click', () => {
+      const worksDel = work.id
+      fetch(`http://localhost:5678/api/works/${worksDel}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            // Supprime le projet de la liste des projets
+            const index = works.findIndex(w => w.id === work.id)
+            if (index > -1) {
+              works.splice(index, 1)
+            }
+            // Actualise la galerie de projets dans la modale
+            displayWorksInModal()
+          } else {
+            throw new Error('Erreur lors de la suppression du projet')
+          }
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    })
+    // Créer l'image et l'ajouter au conteneur
     const modalImg = document.createElement('img')
     modalImg.src = work.imageUrl
     modalImg.alt = work.title
     modalImg.classList.add('modal-img')
 
+    // Créer l'icône de positionnement et le cacher par défaut
+    const modalPositionIcon = document.createElement('i')
+    modalPositionIcon.classList.add(
+      'fa-solid',
+      'fa-arrows-up-down-left-right',
+      'fa-position'
+    )
+    modalFigureContainer.appendChild(modalPositionIcon)
+
+    // Ajouter les événements pour afficher/cacher l'icône de positionnement
+    modalFigureContainer.addEventListener('mouseenter', () => {
+      modalPositionIcon.classList.add('visible')
+    })
+    modalFigureContainer.addEventListener('mouseleave', () => {
+      modalPositionIcon.classList.remove('visible')
+    })
+
     modalFigureContainer.appendChild(modalImg)
+
+    // Ajouter le conteneur d'icône et d'image à la figure
     modalFigure.appendChild(modalFigureContainer)
 
+    // Ajouter le bouton d'édition à la figure
     const modalEdit = document.createElement('figcaption')
     modalEdit.innerText = 'éditer'
     modalEdit.classList.add('modal-fig')
-
     modalFigure.appendChild(modalEdit)
+
+    // Ajouter la figure à la galerie modale
     modalGallery.appendChild(modalFigure)
   })
+}
+
+// Affiche les Edits sur la page Index si l'utilisateur est connecté //
+// Vérifie si l'utilisateur est connecté
+const isConnected = localStorage.getItem('token') !== null
+
+// Récupère les éléments à modifier
+const modifPortfolio = document.getElementById('modif-portfolio')
+const modifPic = document.getElementById('modif-pic')
+
+// Ajoute ou supprime la classe CSS "hidden" en fonction de l'état de connexion de l'utilisateur
+if (isConnected) {
+  modifPortfolio.classList.remove('hidden')
+  modifPic.classList.remove('hidden')
+} else {
+  modifPortfolio.classList.add('hidden')
+  modifPic.classList.add('hidden')
 }
