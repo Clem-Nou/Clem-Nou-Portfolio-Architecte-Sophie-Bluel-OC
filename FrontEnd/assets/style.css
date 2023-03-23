@@ -183,6 +183,7 @@ nav li {
 
 li:hover {
   color: #b1663c;
+  cursor: pointer;
 }
 #introduction {
   display: flex;
@@ -358,18 +359,20 @@ footer nav ul {
 
 .hidden {
   display: none;
+}
+#modif-pic {
+  margin-top: 1rem;
+  padding-left: 58px;
   font-weight: 400;
   font-size: 14px;
 }
-#modif-pic {
-  display: block;
-  margin-top: 1rem;
-  padding-left: 58px;
-}
 #modif-portfolio {
+  font-weight: 400;
+  font-size: 14px;
 }
 /* Modale */
-#modal {
+#delete-project-modal,
+#add-project-modal {
   position: fixed;
   width: 630px;
   height: 731px;
@@ -410,7 +413,8 @@ body.modal-open {
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.3);
 }
-#close-modal {
+#close-add-project-modal,
+#close-delete-project-modal {
   float: right;
   font-size: 20px;
   font-weight: bold;
@@ -419,7 +423,8 @@ body.modal-open {
   background-color: transparent;
   cursor: pointer;
 }
-#modal-subtitle {
+#modal-subtitle,
+#add-modal-subtitle {
   font-family: 'Work Sans';
   font-style: normal;
   font-weight: 400;
@@ -487,7 +492,8 @@ body.modal-open {
 }
 .addPictures:hover,
 .removeGallery:hover,
-#open-modal:hover {
+#open-modal:hover,
+.modal-img-container:hover {
   cursor: pointer;
 }
 .modal-img-container .fa-position {
@@ -505,4 +511,139 @@ body.modal-open {
 }
 .modal-img-container:hover .fa-position {
   visibility: visible;
+}
+
+#addProjectForm {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: auto;
+}
+
+.submit-new-project {
+  padding-top: 20px;
+  border-top: 1px solid #b3b3b3;
+}
+
+#addProjectForm label,
+#addProjectForm input,
+#addProjectForm textarea,
+#addProjectForm button {
+  margin-top: 10px;
+}
+
+.add-picture {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e8f1f7;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  height: 210px;
+}
+
+#add-picture-icon {
+  display: flex;
+  justify-content: center;
+  font-size: 80px;
+  color: #b9c5cc;
+}
+
+.add-picture-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 215px;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #214e64;
+  background-color: #cbd6dc;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.add-picture-button:hover {
+  background-color: #214e64;
+  color: white;
+}
+
+.add-picture-hide {
+  display: none;
+}
+
+#add-picture-info-desc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.picture-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.picture-info > * {
+  margin-bottom: 10px;
+}
+
+.picture-info label,
+.picture-category label {
+  display: block;
+}
+
+.picture-info input[type='text'] {
+  display: block;
+  width: 100%;
+  line-height: 41px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+.picture-category {
+  display: flex;
+  flex-direction: column;
+}
+
+.picture-category select {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  color: #333;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+  margin-bottom: 25px;
+}
+
+.submit-new-project {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+#add-project-button {
+  background: #a7a7a7;
+  height: 50px;
+  width: 215px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 60px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#add-project-button:hover {
+  background-color: #214e64;
 }

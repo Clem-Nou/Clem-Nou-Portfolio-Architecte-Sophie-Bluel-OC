@@ -116,40 +116,67 @@ const fetchData = async () => {
 // La fonction fetchData est appelée pour récupérer les données au démarrage de l'application
 fetchData()
 
-// MODALE //
+// ----------------- MODALE -----------------  //
 
 // Sélection des éléments du DOM
 const openModalContainer = document.querySelector('#open-modal-container')
 const openModalButton = document.querySelector('#open-modal')
-const closeModalButton = document.querySelector('#close-modal')
-const modalDialog = document.querySelector('#modal')
+const closeDeleteModalButton = document.querySelector(
+  '#close-delete-project-modal'
+)
+const closeAddModalButton = document.querySelector('#close-add-project-modal')
+const deleteProjectModal = document.getElementById('delete-project-modal')
+const addProjectModal = document.getElementById('add-project-modal')
+const addProjectButton = document.querySelector('.addPictures')
 const modalGallery = document.getElementById('modal-gallery')
+const modifPortfolio = document.getElementById('modif-portfolio')
+const modifPic = document.getElementById('modif-pic')
+const loginLink = document.querySelector('#nav-login')
+const logoutLink = document.createElement('li')
+const filter = document.querySelector('.filter')
+const returnButton = document.getElementById('return')
+logoutLink.textContent = 'logout'
 
-// Vérification de la présence d'un token d'authentification dans le local storage
-if (localStorage.getItem('token')) {
-  openModalContainer.style.display = 'block'
-}
-
-// Gestionnaire d'événements pour ouvrir la modale
-openModalButton.addEventListener('click', () => {
-  modalDialog.showModal()
-  displayWorksInModal()
-  document.body.classList.add('modal-open')
+returnButton.addEventListener('click', () => {
+  addProjectModal.close()
+  deleteProjectModal.showModal()
 })
 
-// Gestionnaire d'événements pour fermer la modale
-closeModalButton.addEventListener('click', () => {
-  modalDialog.close()
+closeDeleteModalButton.addEventListener('click', function () {
+  modal.close()
   document.body.classList.remove('modal-open')
 })
-
 // Ferme la modale si l'utilisateur clique en dehors de celle-ci
-window.addEventListener('click', event => {
-  if (event.target == modalDialog) {
-    modalDialog.close()
-    document.body.classList.remove('modal-open')
-  }
-})
+function closeOnClickOutside(modal) {
+  window.addEventListener('click', function (event) {
+    if (
+      event.target == modal ||
+      event.target == closeDeleteModalButton ||
+      event.target == closeAddModalButton
+    ) {
+      closeModals()
+      document.body.classList.remove('modal-open')
+    }
+  })
+}
+
+function showModifIcons() {
+  modifPortfolio.classList.remove('hidden')
+  modifPic.classList.remove('hidden')
+}
+
+function hideModifIcons() {
+  modifPortfolio.classList.add('hidden')
+  modifPic.classList.add('hidden')
+}
+
+function loginLogout() {
+  loginLink.parentNode.replaceChild(logoutLink, loginLink)
+  logoutLink.addEventListener('click', () => {
+    localStorage.removeItem('token')
+    window.location.reload()
+  })
+}
 
 // Fonction pour afficher les travaux dans la modale
 function displayWorksInModal() {
@@ -170,29 +197,38 @@ function displayWorksInModal() {
     modalFigureContainer.appendChild(modalDeleteIcon)
     modalDeleteIcon.addEventListener('click', () => {
       const worksDel = work.id
-      fetch(`http://localhost:5678/api/works/${worksDel}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            // Supprime le projet de la liste des projets
-            const index = works.findIndex(w => w.id === work.id)
-            if (index > -1) {
-              works.splice(index, 1)
-            }
-            // Actualise la galerie de projets dans la modale
-            displayWorksInModal()
-          } else {
-            throw new Error('Erreur lors de la suppression du projet')
+      // Affiche une boîte de dialogue de confirmation
+      const confirmed = confirm(
+        'Êtes-vous sûr(e) de vouloir supprimer cet élément ?'
+      )
+      if (confirmed) {
+        // Effectue la suppression
+        fetch(`http://localhost:5678/api/works/${worksDel}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
           }
         })
-        .catch(error => {
-          console.error(error)
-        })
+          .then(response => {
+            if (response.ok) {
+              // Supprime le projet de la liste des projets
+              const index = works.findIndex(w => w.id === work.id)
+              if (index > -1) {
+                works.splice(index, 1)
+              }
+              // Avertissement à l'utilisateur que l'élément a été supprimé
+              alert("L'élément a été supprimé.")
+              // Actualise la galerie de projets dans la modale
+              displayWorksInModal()
+            } else {
+              throw new Error('Erreur lors de la suppression du projet')
+            }
+          })
+          .catch(error => {
+            console.error(error)
+          })
+      }
     })
     // Créer l'image et l'ajouter au conteneur
     const modalImg = document.createElement('img')
@@ -208,15 +244,6 @@ function displayWorksInModal() {
       'fa-position'
     )
     modalFigureContainer.appendChild(modalPositionIcon)
-
-    // Ajouter les événements pour afficher/cacher l'icône de positionnement
-    modalFigureContainer.addEventListener('mouseenter', () => {
-      modalPositionIcon.classList.add('visible')
-    })
-    modalFigureContainer.addEventListener('mouseleave', () => {
-      modalPositionIcon.classList.remove('visible')
-    })
-
     modalFigureContainer.appendChild(modalImg)
 
     // Ajouter le conteneur d'icône et d'image à la figure
@@ -233,19 +260,46 @@ function displayWorksInModal() {
   })
 }
 
-// Affiche les Edits sur la page Index si l'utilisateur est connecté //
-// Vérifie si l'utilisateur est connecté
+// Vérification de la présence d'un token d'authentification dans le local storage
 const isConnected = localStorage.getItem('token') !== null
 
-// Récupère les éléments à modifier
-const modifPortfolio = document.getElementById('modif-portfolio')
-const modifPic = document.getElementById('modif-pic')
-
-// Ajoute ou supprime la classe CSS "hidden" en fonction de l'état de connexion de l'utilisateur
 if (isConnected) {
-  modifPortfolio.classList.remove('hidden')
-  modifPic.classList.remove('hidden')
+  openModalContainer.style.display = 'block'
+  filter.style.display = 'none'
+  showModifIcons()
+  loginLogout()
 } else {
-  modifPortfolio.classList.add('hidden')
-  modifPic.classList.add('hidden')
+  hideModifIcons()
 }
+
+// Gestionnaire d'événements pour ouvrir la modale
+openModalButton.addEventListener('click', () => {
+  deleteProjectModal.showModal()
+  displayWorksInModal()
+  document.body.classList.add('modal-open')
+})
+
+displayWorksInModal()
+closeOnClickOutside(deleteProjectModal, closeDeleteModalButton)
+
+// Modale d'ajout //
+
+function openProjectModal() {
+  deleteProjectModal.showModal()
+}
+
+function openAddProjectModal() {
+  addProjectModal.showModal()
+  deleteProjectModal.close() // ferme la modale 1 si elle est ouverte
+}
+
+function closeModals() {
+  deleteProjectModal.close()
+  addProjectModal.close()
+}
+
+addProjectButton.addEventListener('click', () => {
+  openAddProjectModal()
+})
+
+closeOnClickOutside(addProjectModal, closeAddModalButton)

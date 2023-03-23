@@ -21,9 +21,9 @@
     <button id="confirm-changes">Publier les changements</button>
     </div>
 
-    <dialog id="modal">
+    <dialog id="delete-project-modal">
       <div>
-        <button id="close-modal">&times;</button>
+        <button id="close-delete-project-modal">&times;</button>
         <h2 id="modal-subtitle">Galerie photo</h2>
         <div class="modal-gallery" id="modal-gallery"><!--Images--></div>
         <div class="buttonModalFin">
@@ -35,6 +35,43 @@
           </button>
       </div>
     </dialog>
+
+    <dialog id="add-project-modal">
+      <i class="fa-solid fa-arrow-left" id="return"></i>
+      <button id="close-add-project-modal">&times;</button>
+      <h2 id="modal-subtitle">Ajout photo</h2>
+
+      <form id="addProjectForm">
+          <div class="add-picture">
+                <div class="preview"><img class="imagePreview" /></div>
+                <div class="previewOff">
+                  <i
+                    class="fa-regular fa-image"
+                    id="add-picture-icon"
+                    src="#ajoutPhoto"></i>
+                    <label for="image" class="add-picture-button">+ Ajouter photo</label>
+                    <input class="add-picture-hide"
+                      type="file"
+                      id="image"
+                      name="image"
+                      accept=".png, .jpeg, .jpg" />
+                    <p id="add-picture-info-desc">jpg, png : 4mo max</p>
+                  </div>
+          </div>
+          <div class="picture-info">
+            <div class="picture-title">
+              <label for="title">Titre</label>
+              <input type="text" id="title" name="title" />
+            </div>
+            <div class="picture-category">
+              <label for="category">Catégorie</label>
+              <select name="category" id="category"></select>
+            </div>
+        <div class="submit-new-project">
+        <button id="add-project-button" type="submit">Valider</button>
+      </div>
+      </form>
+    </dialog>
     <!--Modale-->
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
@@ -42,7 +79,7 @@
         <ul>
           <li><a href="/FrontEnd/index.html#portfolio">projets</a></li>
           <li><a href="/FrontEnd/index.html#contact">contact</a></li>
-          <li><a href="/FrontEnd/login.html">login</a></li>
+          <li id="nav-login"><a href="/FrontEnd/login.html">login</a></li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
       </nav>
@@ -78,7 +115,7 @@
       <section id="portfolio">
         <h2>Mes Projets</h2>
         <a id="modif-portfolio" class="hidden"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
-        <div class="filter hidden" id="filter"></div>
+        <div class="filter"></div>
         <div class="gallery"></div>
       </section>
 
