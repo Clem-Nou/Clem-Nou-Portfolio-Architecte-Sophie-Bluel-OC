@@ -114,7 +114,6 @@ const openModalButton = document.querySelector('#open-modal')
 const closeAddModalButton = document.querySelector('#close-add-project-modal')
 const deleteProjectModal = document.getElementById('delete-project-modal')
 const addProjectModal = document.getElementById('add-project-modal')
-const addProjectButton = document.querySelector('.addPictures')
 const modalGallery = document.getElementById('modal-gallery')
 const modifPortfolio = document.getElementById('modif-portfolio')
 const modifPic = document.getElementById('modif-pic')
@@ -161,6 +160,19 @@ function closeOnClickOutside(modal) {
       document.body.classList.remove('modal-open')
     }
   })
+}
+// Ferme la modale d'ajout de projet si l'utilisateur clique en dehors de la modale ou sur le bouton de fermeture
+closeOnClickOutside(addProjectModal, closeAddModalButton)
+
+// Fonction pour fermer la modale d'ajout de projet
+function closeAddProjectModal() {
+  // Réinitialisation du formulaire
+  addProjectForm.reset()
+  imagePreview.classList.add('hidden')
+  imagePreview.src = ''
+  categorySelection.innerHTML = ''
+  // Fermeture de la modale
+  addProjectModal.close()
 }
 
 // Vérification de la présence d'un token d'authentification dans le local storage
@@ -272,14 +284,6 @@ function displayWorksInModal() {
 displayWorksInModal()
 closeOnClickOutside(deleteProjectModal)
 
-// Ajoute un événement au clic sur le bouton d'ajout de projet pour ouvrir la modale d'ajout
-addProjectButton.addEventListener('click', () => {
-  openAddProjectModal()
-})
-
-// Ferme la modale d'ajout de projet si l'utilisateur clique en dehors de la modale ou sur le bouton de fermeture
-closeOnClickOutside(addProjectModal, closeAddModalButton)
-
 const inputElement = document.getElementById('image')
 const previewElement = document.getElementById('image-preview')
 const addButtonElement = document.querySelector('.add-picture-button')
@@ -334,18 +338,6 @@ function openAddProjectModal() {
   }
 }
 
-// Fonction pour fermer la modale d'ajout de projet
-function closeAddProjectModal() {
-  // Réinitialisation du formulaire
-  addProjectForm.reset()
-  imagePreview.classList.add('hidden')
-  imagePreview.src = ''
-  categorySelection.innerHTML = ''
-
-  // Fermeture de la modale
-  addProjectModal.close()
-}
-
 // Fonction pour prévisualiser l'image sélectionnée
 function previewImage() {
   const file = imageInput.files[0]
@@ -365,11 +357,6 @@ function previewImage() {
 document
   .querySelector('.addPictures')
   .addEventListener('click', openAddProjectModal)
-
-// Gestionnaire d'événement pour fermer la modale d'ajout de projet
-document
-  .getElementById('close-add-project-modal')
-  .addEventListener('click', closeAddProjectModal)
 
 // Gestionnaire d'événement pour retourner à la modale de galerie
 document.getElementById('return').addEventListener('click', () => {
@@ -392,7 +379,6 @@ addProjectForm.addEventListener('submit', event => {
       Accept: 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
     },
-
     body: formData
   })
     .then(response => {
