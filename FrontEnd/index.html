@@ -15,71 +15,14 @@
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
   <body>
-    <!--Modale-->
-    <div id="open-modal-container" style="display: none">
-    <button id="open-modal"><i class="fa-solid fa-pen-to-square"></i> Mode édition</button>
-    <button id="confirm-changes">Publier les changements</button>
-    </div>
-
-    <dialog id="delete-project-modal">
-      <div>
-        <button id="close-delete-project-modal">&times;</button>
-        <h2 id="modal-subtitle">Galerie photo</h2>
-        <div class="modal-gallery" id="modal-gallery"><!--Images--></div>
-        <div class="buttonModalFin">
-          <button type="button" class="addPictures">
-            Ajouter une photo
-          </button>
-          <button type="button" class="removeGallery">
-            Supprimer la galerie
-          </button>
-      </div>
-    </dialog>
-
-    <dialog id="add-project-modal">
-      <i class="fa-solid fa-arrow-left" id="return"></i>
-      <button id="close-add-project-modal">&times;</button>
-      <h2 id="modal-subtitle">Ajout photo</h2>
-
-      <form id="addProjectForm">
-          <div class="add-picture">
-                <div class="preview"><img class="imagePreview" /></div>
-                <div class="previewOff">
-                  <i
-                    class="fa-regular fa-image"
-                    id="add-picture-icon"
-                    src="#ajoutPhoto"></i>
-                    <label for="image" class="add-picture-button">+ Ajouter photo</label>
-                    <input class="add-picture-hide"
-                      type="file"
-                      id="image"
-                      name="image"
-                      accept=".png, .jpeg, .jpg" />
-                    <p id="add-picture-info-desc">jpg, png : 4mo max</p>
-                  </div>
-          </div>
-          <div class="picture-info">
-            <div class="picture-title">
-              <label for="title">Titre</label>
-              <input type="text" id="title" name="title" />
-            </div>
-            <div class="picture-category">
-              <label for="category">Catégorie</label>
-              <select name="category" id="category"></select>
-            </div>
-        <div class="submit-new-project">
-        <button id="add-project-button" type="submit">Valider</button>
-      </div>
-      </form>
-    </dialog>
-    <!--Modale-->
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
         <ul>
-          <li><a href="/FrontEnd/index.html#portfolio">projets</a></li>
-          <li><a href="/FrontEnd/index.html#contact">contact</a></li>
-          <li id="nav-login"><a href="/FrontEnd/login.html">login</a></li>
+          <li><a href="/FrontEnd/index.html#portfolio">Projets</a></li>
+          <li><a href="/FrontEnd/index.html#contact">Contact</a></li>
+          <li id="logoutLink" style="display: none;"><a href="#">Logout</a></li>
+          <li id="loginLink"><a href="/FrontEnd/login.html">Login</a></li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
       </nav>
@@ -112,12 +55,72 @@
         </article>
       </section>
 
-      <section id="portfolio">
+      <div class="portfolio-header">
         <h2>Mes Projets</h2>
         <a id="modif-portfolio" class="hidden"><i class="fa-solid fa-pen-to-square"></i>modifier</a>
+      </div>
+      <section id="portfolio">
         <div class="filter"></div>
         <div class="gallery"></div>
       </section>
+
+   <!--Modale-->
+   <header> 
+    <div id="open-modal-container" style="display: none">
+    <button id="open-modal"><i class="fa-solid fa-pen-to-square"></i> Mode édition</button>
+    <button id="confirm-changes">Publier les changements</button>
+    </div>
+  </header>
+
+  <dialog id="delete-project-modal">
+    <div>
+      <button id="close-delete-project-modal">&times;</button>
+      <h2 id="modal-subtitle">Galerie photo</h2>
+      <div class="modal-gallery" id="modal-gallery"><!--Images--></div>
+      <div class="buttonModalFin">
+        <button type="button" class="addPictures">
+          Ajouter une photo
+        </button>
+        <button type="button" class="removeGallery">
+          Supprimer la galerie
+        </button>
+    </div>
+  </dialog>
+
+  <dialog id="add-project-modal">
+    <i class="fa-solid fa-arrow-left" id="return"></i>
+    <button id="close-add-project-modal">&times;</button>
+    <h2 id="modal-subtitle">Ajout photo</h2>
+  
+    <form id="add-project-form">
+      <div class="add-picture">
+        <div class="preview">
+          <img class="image-preview hidden" id="image-preview" />
+          <div class="add-picture-placeholder">
+            <i class="fa-regular fa-image" id="add-picture-icon"></i>
+            <label for="image" class="add-picture-button">+ Ajouter photo</label>
+          </div>
+          <input class="add-picture-hide" type="file" id="image" name="image" accept=".png, .jpeg, .jpg" />
+        </div>
+        <p id="add-picture-info-desc">jpg, png : 4mo max</p>
+      </div>
+      <div class="picture-info">
+        <div class="picture-title">
+          <label for="title">Titre</label>
+          <input type="text" id="title" name="title" />
+        </div>
+        <div class="picture-category">
+          <label for="category">Catégorie</label>
+          <select name="category" id="category-selection"></select>
+        </div>
+      </div>
+      <div id="error-message"></div>
+      <div class="submit-new-project">
+        <button id="add-project-button" type="submit">Valider</button>
+      </div>
+    </form>
+  </dialog>
+  <!--Modale-->
 
       <section id="contact">
         <h2>Contact</h2>
