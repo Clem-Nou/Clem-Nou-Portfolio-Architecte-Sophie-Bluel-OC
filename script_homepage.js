@@ -14,12 +14,13 @@ const displayWorks = category => {
   const filteredWorks =
     category === 'Tous'
       ? worksBackup // Si 'Tous' est sélectionné, on affiche toutes les oeuvres
-      : works.filter(work => work.category.name === category) // Sinon, on affiche seulement les oeuvres de la catégorie sélectionnée
+      : works.filter(work => work.category && work.category.name === category) // Sinon, on affiche seulement les oeuvres de la catégorie sélectionnée
   //s'applique a chaque éléments - Si la catégorie de l'élément actuel === à la catégorie choisie alors on l'ajoute
 
   // On ajoute chaque oeuvre au HTML
   filteredWorks.forEach(work => {
     const figure = document.createElement('figure')
+    figure.id = `project-${work.id}`
     const img = document.createElement('img')
     img.src = work.imageUrl
     img.alt = work.title
@@ -112,6 +113,9 @@ fetchData()
 const openModalContainer = document.querySelector('#open-modal-container')
 const openModalButton = document.querySelector('#open-modal')
 const closeAddModalButton = document.querySelector('#close-add-project-modal')
+const closeDeleteModalButton = document.querySelector(
+  '#close-delete-project-modal'
+)
 const deleteProjectModal = document.getElementById('delete-project-modal')
 const addProjectModal = document.getElementById('add-project-modal')
 const modalGallery = document.getElementById('modal-gallery')
@@ -155,14 +159,19 @@ function closeModals() {
 // Ferme la modale si l'utilisateur clique en dehors de celle-ci
 function closeOnClickOutside(modal) {
   window.addEventListener('click', function (event) {
-    if (event.target == modal || event.target == closeAddModalButton) {
+    if (
+      event.target == modal ||
+      event.target == closeAddModalButton ||
+      event.target == closeDeleteModalButton
+    ) {
       closeModals()
+      closeAddProjectModal() // reset du formulaire
       document.body.classList.remove('modal-open')
     }
   })
 }
 // Ferme la modale d'ajout de projet si l'utilisateur clique en dehors de la modale ou sur le bouton de fermeture
-closeOnClickOutside(addProjectModal, closeAddModalButton)
+closeOnClickOutside(addProjectModal)
 
 // Fonction pour fermer la modale d'ajout de projet
 function closeAddProjectModal() {
@@ -171,6 +180,7 @@ function closeAddProjectModal() {
   imagePreview.classList.add('hidden')
   imagePreview.src = ''
   categorySelection.innerHTML = ''
+  imageInput.value = null
   // Fermeture de la modale
   addProjectModal.close()
 }
@@ -198,7 +208,9 @@ function hideModifIcons() {
   modifPortfolio.classList.add('hidden')
   modifPic.classList.add('hidden')
 }
-
+window.addEventListener('load', event => {
+  console.log('La page est complètement chargée')
+})
 // Fonction pour afficher les travaux dans la modale
 function displayWorksInModal() {
   // Effacer le contenu précédent de la modale
@@ -216,7 +228,8 @@ function displayWorksInModal() {
     const modalDeleteIcon = document.createElement('i')
     modalDeleteIcon.classList.add('fa-regular', 'fa-trash-can')
     modalFigureContainer.appendChild(modalDeleteIcon)
-    modalDeleteIcon.addEventListener('click', () => {
+    modalDeleteIcon.addEventListener('click', event => {
+      event.preventDefault()
       const worksDel = work.id
       // Affiche une boîte de dialogue de confirmation
       const confirmed = confirm(
@@ -238,10 +251,17 @@ function displayWorksInModal() {
               if (index > -1) {
                 works.splice(index, 1)
               }
+              // Supprime le projet de la galerie HTML
+              const project = document.getElementById(`${work.id}`)
+              if (project) {
+                project.parentNode.removeChild(project)
+              }
               // Avertissement à l'utilisateur que l'élément a été supprimé
               alert("L'élément a été supprimé.")
               // Actualise la galerie de projets dans la modale
               displayWorksInModal()
+              // Actualise la galerie principale des projets
+              displayWorks()
             } else {
               throw new Error('Erreur lors de la suppression du projet')
             }
@@ -292,22 +312,29 @@ const addPicturePlaceholderElement = document.querySelector(
 )
 
 inputElement.addEventListener('change', e => {
-  const file = e.target.files[0]
+  previewImage()
+  if (inputElement.value !== '') {
+    addPicturePlaceholderElement.style.display = 'none'
+  } else {
+    addPicturePlaceholderElement.style.display = 'block'
+  }
+})
+
+function previewImage() {
+  const file = inputElement.files[0]
+  const reader = new FileReader()
+
+  reader.addEventListener('load', () => {
+    previewElement.src = reader.result
+    previewElement.classList.remove('hidden')
+  })
 
   if (file) {
-    const reader = new FileReader()
     reader.readAsDataURL(file)
-
-    reader.onload = () => {
-      previewElement.src = reader.result
-      addPicturePlaceholderElement.style.display = 'none'
-      previewElement.classList.remove('hidden')
-    }
-  } else {
-    previewElement.src = ''
-    addPicturePlaceholderElement.style.display = 'block'
-    previewElement.classList.add('hidden')
   }
+}
+addProjectModal.addEventListener('close', () => {
+  addPicturePlaceholderElement.style.display = 'block'
 })
 
 // Récupération des éléments du DOM
@@ -338,21 +365,6 @@ function openAddProjectModal() {
   }
 }
 
-// Fonction pour prévisualiser l'image sélectionnée
-function previewImage() {
-  const file = imageInput.files[0]
-  const reader = new FileReader()
-
-  reader.addEventListener('load', () => {
-    imagePreview.src = reader.result
-    imagePreview.classList.remove('hidden')
-  })
-
-  if (file) {
-    reader.readAsDataURL(file)
-  }
-}
-
 // Gestionnaire d'événement pour ouvrir la modale d'ajout de projet
 document
   .querySelector('.addPictures')
@@ -367,28 +379,38 @@ document.getElementById('return').addEventListener('click', () => {
 imageInput.addEventListener('change', previewImage)
 
 // Gestionnaire d'événement pour valider le formulaire d'ajout de projet
-addProjectForm.addEventListener('submit', event => {
+// Écouter l'événement de soumission du formulaire
+const form = document.querySelector('#add-project-form')
+form.addEventListener('submit', event => {
   event.preventDefault()
 
-  // Envoi de la requête POST pour ajouter le projet
-  const formData = new FormData(addProjectForm)
+  // Récupérer les données du formulaire
+  const formData = new FormData(form)
 
+  // Envoyer une requête POST pour ajouter un nouveau projet
   fetch('http://localhost:5678/api/works/', {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
     },
     body: formData
   })
     .then(response => {
       if (response.ok) {
-        // Fermeture de la modale et rechargement de la page pour afficher le nouveau projet
-        closeAddProjectModal()
-        location.reload()
+        // Ajouter le nouveau projet à la liste des projets
+        return response.json()
       } else {
         throw new Error("Erreur lors de l'ajout du projet")
       }
+    })
+    .then(newProject => {
+      works.push(newProject)
+      displayWorks('Tous')
+      // Actualiser la galerie de projets dans la modale
+      displayWorksInModal()
+
+      // Fermer la modale
+      closeAddProjectModal()
     })
     .catch(error => {
       console.error(error)
