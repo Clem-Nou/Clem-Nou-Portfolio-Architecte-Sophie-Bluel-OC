@@ -256,12 +256,18 @@ function displayWorksInModal() {
               if (project) {
                 project.parentNode.removeChild(project)
               }
+              // Supprime le projet de la liste de sauvegarde des projets
+              const indexBackup = worksBackup.findIndex(w => w.id === work.id)
+              if (indexBackup > -1) {
+                worksBackup.splice(indexBackup, 1)
+              }
               // Avertissement à l'utilisateur que l'élément a été supprimé
               alert("L'élément a été supprimé.")
               // Actualise la galerie de projets dans la modale
               displayWorksInModal()
               // Actualise la galerie principale des projets
-              displayWorks()
+              displayWorks('Tous')
+              return
             } else {
               throw new Error('Erreur lors de la suppression du projet')
             }
@@ -405,6 +411,7 @@ form.addEventListener('submit', event => {
     })
     .then(newProject => {
       works.push(newProject)
+      worksBackup.push(newProject)
       displayWorks('Tous')
       // Actualiser la galerie de projets dans la modale
       displayWorksInModal()
