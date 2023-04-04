@@ -110,11 +110,11 @@ fetchData()
 // ----------------- MODALE -----------------  //
 
 // Sélection des éléments du DOM
-const openModalContainer = document.querySelector('#open-modal-container')
-const openModalButton = document.querySelector('#open-modal')
-const closeAddModalButton = document.querySelector('#close-add-project-modal')
-const closeDeleteModalButton = document.querySelector(
-  '#close-delete-project-modal'
+const openModalContainer = document.getElementById('open-modal-container')
+const openModalButton = document.getElementById('open-modal')
+const closeAddModalButton = document.getElementById('close-add-project-modal')
+const closeDeleteModalButton = document.getElementById(
+  'close-delete-project-modal'
 )
 const deleteProjectModal = document.getElementById('delete-project-modal')
 const addProjectModal = document.getElementById('add-project-modal')
